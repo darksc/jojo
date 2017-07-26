@@ -30,7 +30,8 @@
     "restc": "^0.1.0",
     "sequelize": "^4.0.0",
     "simplify-geometry": "0.0.2",
-    "spdy": "^3.4.7"
+    "spdy": "^3.4.7",
+    "vuex": "^2.3.1"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"

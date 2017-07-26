@@ -4,13 +4,26 @@
       img(src="../../static/images/pig.png")
     .header-nav
       el-menu(theme="dark" v-bind:default-active="activeIndex" mode="horizontal" v-on:select="handleSelect")
-        el-menu-item(index="1") 服务器
+        el-menu-item(index="server") 服务器
+        el-menu-item(index="logs") 日志
 </template>
 <script>
+  import { mapState } from 'vuex'
+  import { appRouter } from '../router/'
   export default {
     data () {
       return {
-        activeIndex: '1'
+      }
+    },
+    computed: {
+      ...mapState({
+        activeIndex: state => state.nav.activeIndex
+      })
+    },
+    methods: {
+      handleSelect (key, keyPath) {
+        this.$store.dispatch('setNav', key)
+        appRouter.push({name: key})
       }
     }
   }

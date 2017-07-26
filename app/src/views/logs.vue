@@ -1,12 +1,12 @@
 <template lang="pug">
-  .server-wrap
+  .wrap
     h1 {{title}}
 </template>
 <script>
   export default {
     data () {
       return {
-        title: '服务器'
+        title: '日志'
       }
     }
   }

@@ -3,43 +3,41 @@
     header.header-wrap
       header-nav
 
+    .breadcrumb-wrap
+      el-breadcrumb(separator="/")
+        el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
+        el-breadcrumb-item(v-bind:to="{ path: '/' + routeObj[activeIndex].name }" v-if="activeIndex !== 'index'") {{routeObj[activeIndex].cn}}
     div.content-wrap
-      div.content
-        div.nav
-          el-menu(default-active="0" class="el-menu-vertical-demo" theme="dark")
-            el-menu-item(v-bind:index="index + ''" v-for="(item, index) in nav" v-on:click="goto(item)" v-bind:key="item.title" ) {{item.title}}
-        div.view
-          el-scrollbar(tag="div" class="view-scrollbar" wrap-class="el-select-dropdown__wrap" view-class="el-select-dropdown__list")
-            router-view
+      el-scrollbar(tag="div" class="view-scrollbar" wrap-class="el-select-dropdown__wrap" view-class="el-select-dropdown__list")
+        router-view
 </template>
 <script>
-  import router from './router'
+  import { mapState } from 'vuex'
+  import { appRouter, routeObj } from './router'
+  import store from './store'
   import headerNav from './components/header'
   export default {
     name: 'app',
     data () {
       return {
-        nav: [
-          {
-            title: '端口登记',
-            name: 'dtfd'
-          },
-          {
-            title: '桩号转换',
-            name: 'zhzh'
-          },
-          {
-            title: '周边资源',
-            name: 'zbzy'
-          }
-        ]
+        routeObj: routeObj
       }
     },
     mounted () {
+      appRouter.beforeEach((to, from, next) => {
+        this.$store.dispatch('setNav', to.name)
+        next()
+      })
     },
+    computed: {
+      ...mapState({
+        activeIndex: state => state.nav.activeIndex
+      })
+    },
+    store,
     methods: {
       goto (item) {
-        router.push({name: item.name})
+        appRouter.push({name: item.name})
       }
     },
     components: {
@@ -77,56 +75,21 @@
     padding: 0 20px
     color: #fff
     font-size: 24px
+  .breadcrumb-wrap
+    height: 40px
+    line-height: 40px
+    overflow: hidden
+    padding: 0 20px
+    .el-breadcrumb
+      margin-top: 14px
+      font-size: 14px
   .content-wrap
     position: absolute
-    top: 60px
+    top: 100px
     bottom: 0
     width: 100%
-    .content
-      height: 100%
-      width: 400px
-      float: left
-      .nav
-        height: 100%
-        width: 100px
-        background-color: #324157
-      .view
-        position: absolute
-        left: 100px
-        top: 0
-        right: 0
-        height: 100%
-        background-color: #fafafa
-  .left-wrap
     padding: 20px
-    .my-autocomplete
-      li
-        line-height: normal
-        padding: 7px
-        .one
-          text-overflow: ellipsis
-          overflow: hidden
-        .two
-          font-size: 12px
-          color: #b4b4b4
-        .highlighted .two
-          color: #ddd
-    .el-autocomplete, .el-select
-      width: 100%
-    .button-wrap
-      text-align: center
-    .server-wrap
-      > span
-        display: inline-block
-        font-size: 14px
-        color: #48576a
-        line-height: 1
-        padding: 0 0 10px
-      .el-radio-group
-        width: 100%
-        margin-bottom: 30px
-        label
-          width: 50%
-          span
-            width: 100%
+    box-sizing: border-box
+    background-color: #fafafa
+
 </style>

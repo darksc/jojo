@@ -4,16 +4,16 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import App from './App'
-import router from './router'
+import { appRouter } from './router'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 
 /* eslint-disable no-new */
-new Vue({
+window.vmApp = new Vue({
   el: '#app',
-  router,
+  router: appRouter,
   template: '<App/>',
   components: { App }
 })
