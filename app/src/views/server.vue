@@ -30,7 +30,7 @@
         el-form-item(label="密码"  prop="pass")
           el-input(v-model="form.pass")
         el-form-item
-          el-button(type="primary" v-on:click="save()") 保存
+          el-button(type="primary" v-on:click="saveClick()") 保存
           el-button(v-on:click="reset('addForm')") 取消
 </template>
 <script>
@@ -76,12 +76,12 @@
       }
 
       let validateIp = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        let reg = /^((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.)){4}$/
         if (value === '') {
-          callback(new Error('请输入介绍'))
+          callback(new Error('请输入IP地址'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+            callback(new Error('（请输入正确的IP地址）'))
           } else {
             callback()
           }
@@ -89,12 +89,12 @@
       }
 
       let validateUser = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        let reg = /^[a-zA-Z0-9_]{3,10}$/
         if (value === '') {
-          callback(new Error('请输入介绍'))
+          callback(new Error('请输入用户名'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+            callback(new Error('（3~10个字符，包含字母、数字、下划线）'))
           } else {
             callback()
           }
@@ -102,12 +102,12 @@
       }
 
       let validatePass = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        let reg = /^[a-zA-Z0-9_]{6,16}$/
         if (value === '') {
-          callback(new Error('请输入介绍'))
+          callback(new Error('请输入密码'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+            callback(new Error('（6~16个字符，包含字母、数字、下划线）'))
           } else {
             callback()
           }
@@ -146,6 +146,15 @@
       this.search()
     },
     methods: {
+      saveClick () {
+        this.$refs['addForm'].validate((valid) => {
+          if (valid) {
+            this.save()
+          } else {
+            return false
+          }
+        })
+      },
       save () {
         server.serverSave(this.form).then(res => {
           if (res.data.data) {
