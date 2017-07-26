@@ -14,8 +14,8 @@ module.exports = async (ctx, next) => {
           id: ctx.query['id']
         }
       })
-      .then(server => {
-        ctx.body = server > 0 ? true : false
+      .then(port => {
+        ctx.body = port > 0 ? true : false
       })
   } catch (error) {
     console.log(error)

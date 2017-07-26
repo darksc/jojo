@@ -18,7 +18,7 @@ module.exports = async (ctx, next) => {
         serverId: ctx.request.body['serverId']
       })
       .save()
-      .then(server => {
+      .then(port => {
         ctx.body = true
       })
   } catch (error) {
