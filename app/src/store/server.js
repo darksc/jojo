@@ -13,6 +13,7 @@ const defaults = {
 
 Object.assign(axios.defaults, defaults)
 
+// server 接口
 export const serverSave = _params => {
   return axios.post(api.serverSave, _params)
 }
@@ -35,6 +36,29 @@ export const serverRemove = _params => {
 
 export const serverSearchById = _params => {
   return axios.get(api.serverSearchById, {
+    params: _params
+  })
+}
+
+// port 接口
+export const portSearch = _params => {
+  return axios.get(api.portSearch, {
+    params: _params
+  })
+}
+
+export const portSave = _params => {
+  return axios.post(api.portSave, _params)
+}
+
+export const portRemove = _params => {
+  return axios.get(api.portRemove, {
+    params: _params
+  })
+}
+
+export const portCheckName = _params => {
+  return axios.get(api.portCheckName, {
     params: _params
   })
 }

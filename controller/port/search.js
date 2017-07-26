@@ -7,7 +7,11 @@ const Port = require('../../model/Port')
 
 const findAll = async (ctx, next) => {
   try {
-    await Port.findAll().then(data => {
+    await Port.findAll({
+      where: {
+        serverId: ctx.query['serverId']
+      }
+    }).then(data => {
       ctx.body = data
     })
   } catch (error) {

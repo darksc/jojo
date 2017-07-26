@@ -14,6 +14,7 @@ const response = require('./middlewares/response')
 
 const index = require('./routes/index')
 const server = require('./routes/server')
+const port = require('./routes/port')
 
 // error handler
 onerror(app)
@@ -47,5 +48,6 @@ app.use(response)
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(server.routes(), index.allowedMethods())
+app.use(port.routes(), index.allowedMethods())
 
 module.exports = app

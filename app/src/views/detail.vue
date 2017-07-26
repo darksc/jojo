@@ -13,9 +13,9 @@
         el-table-column(prop="info" label="描述 ")
         el-table-column(label="操作" width="190")
           template(scope="scope")
-            el-button(size="small" v-on:click="handleEdit(scope.$index, scope.row)") 查看
+            el-button(size="small" v-on:click="handleSearch(scope.$index, scope.row)") 查看
             el-button(size="small" v-on:click="handleEdit(scope.$index, scope.row)") 编辑
-            el-button(size="small" type="danger" v-on:click="handleEdit(scope.$index, scope.row)") 删除
+            el-button(size="small" type="danger" v-on:click="handleRemove(scope.row)") 删除
 
     el-dialog(title="添加端口" v-model="dialogVisible" size="tiny")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="addForm")
@@ -33,8 +33,62 @@
 </template>
 <script>
   import * as server from '../store/server'
+
+  let usertimer
   export default {
     data () {
+      let validateName = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9]{1,6}$/
+        if (value === '') {
+          callback(new Error('请输入名称'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~6个字符，包含字母、数字）'))
+          } else {
+            clearTimeout(usertimer)
+            usertimer = setTimeout(() => {
+              server.portCheckName({
+                name: value
+              }).then(res => {
+                if (res.data.data === true) {
+                  callback()
+                } else {
+                  callback(new Error('该名称已存在'))
+                }
+              })
+            }, 500)
+          }
+        }
+      }
+
+      let validatePort = (rule, value, callback) => {
+        let reg = /^[0-9]*$/
+        if (value === '') {
+          callback(new Error('请输入端口'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（值能是数字）'))
+          } else {
+            callback()
+          }
+        }
+      }
+
+      let validateType = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入类型'))
+        } else {
+          callback()
+        }
+      }
+
+      let validateInfo = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入描述'))
+        } else {
+          callback()
+        }
+      }
       return {
         serverId: '',
         server: {},
@@ -43,7 +97,22 @@
           name: '',
           port: '',
           type: '',
-          info: ''
+          info: '',
+          serverId: ''
+        },
+        formRules: {
+          name: [
+            { validator: validateName, required: true, trigger: 'change' }
+          ],
+          port: [
+            { validator: validatePort, required: true, trigger: 'change' }
+          ],
+          type: [
+            { validator: validateType, required: true, trigger: 'change' }
+          ],
+          info: [
+            { validator: validateInfo, required: true, trigger: 'change' }
+          ]
         },
         tableData: [{
           name: '什么什么',
@@ -56,6 +125,7 @@
     mounted () {
       this.serverId = this.$route.query.id
       this.getServer(this.serverId)
+      this.getPort(this.serverId)
     },
     methods: {
       getServer (id) {
@@ -67,9 +137,71 @@
           }
         })
       },
+      getPort (serverId) {
+        server.portSearch({
+          serverId: serverId
+        }).then(res => {
+          this.tableData = res.data.data
+        })
+      },
+      saveClick () {
+        this.$refs['addForm'].validate((valid) => {
+          if (valid) {
+            this.save()
+          } else {
+            return false
+          }
+        })
+      },
+      save () {
+        this.form.serverId = this.serverId
+        server.portSave(this.form).then(res => {
+          if (res.data.data) {
+            this.$message({
+              message: '恭喜你，保存成功!',
+              type: 'success'
+            })
+            this.$refs['addForm'].resetFields()
+            this.dialogVisible = false
+            this.getPort(this.serverId)
+          } else {
+            this.$message({
+              message: '对不起，保存失败!',
+              type: 'error'
+            })
+          }
+        })
+      },
       reset (name) {
         this.$refs[name].resetFields()
         this.dialogVisible = false
+      },
+      handleRemove (row) {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.portRemove(row.id)
+        }).catch(() => {})
+      },
+      portRemove (id) {
+        server.portRemove({
+          id: id
+        }).then(res => {
+          if (res.data.data) {
+            this.$message({
+              message: '恭喜你，删除成功!',
+              type: 'success'
+            })
+            this.getPort(this.serverId)
+          } else {
+            this.$message({
+              message: '恭喜你，删除失败!',
+              type: 'error'
+            })
+          }
+        })
       }
     }
   }
