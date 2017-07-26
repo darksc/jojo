@@ -35,6 +35,7 @@
 </template>
 <script>
   import * as server from '../store/server'
+  import { appRouter } from '../router/'
   let usertimer
   export default {
     data () {
@@ -183,7 +184,7 @@
         })
       },
       goDetail (id) {
-        console.log(id)
+        appRouter.push({name: 'detail', query: {id: id}})
       },
       removeClick (id) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {

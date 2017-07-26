@@ -2,7 +2,7 @@ import { NAV_CHANGE } from '../mutation-types'
 
 // initial state
 const state = {
-  activeIndex: 'server'
+  activeIndex: 'index'
 }
 
 // getters

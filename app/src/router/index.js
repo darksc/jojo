@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import index from '@/views/index'
 import Server from '@/views/server'
 import Logs from '@/views/logs'
+import Detail from '@/views/detail'
 
 Vue.use(Router)
 
@@ -18,6 +19,12 @@ const routeObj = {
     name: 'server',
     cn: '服务器',
     component: Server
+  },
+  detail: {
+    path: '/detail:id?',
+    name: 'detail',
+    cn: '服务器详情',
+    component: Detail
   },
   logs: {
     path: '/logs',
@@ -35,7 +42,7 @@ for (let key in routeObj) {
 
 routes.push({
   path: '*',
-  redirect: '/server'
+  redirect: '/'
 })
 
 const appRouter = new Router({
