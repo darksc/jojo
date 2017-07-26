@@ -3,12 +3,12 @@ const uuidV4 = require('uuid/v4')
 const ApiError = require('../../middlewares/ApiError')
 const ErrorNames = require('../../middlewares/ErrorNames')
 
-const Server = require('../../model/Server')
+const Port = require('../../model/Port')
 
 
 module.exports = async (ctx, next) => {
   try {
-    await Server
+    await Port
       .destroy({
         where: {
           id: ctx.query['id']

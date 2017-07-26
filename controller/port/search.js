@@ -3,11 +3,11 @@ const uuidV4 = require('uuid/v4')
 const ApiError = require('../../middlewares/ApiError')
 const ErrorNames = require('../../middlewares/ErrorNames')
 
-const Server = require('../../model/Server')
+const Port = require('../../model/Port')
 
 const findAll = async (ctx, next) => {
   try {
-    await Server.findAll().then(data => {
+    await Port.findAll().then(data => {
       ctx.body = data
     })
   } catch (error) {
@@ -18,7 +18,7 @@ const findAll = async (ctx, next) => {
 
 const searchById = async (ctx, next) => {
   try {
-    await Server.findOne({
+    await Port.findOne({
       where: {
         id: ctx.query['id']
       }
@@ -33,7 +33,7 @@ const searchById = async (ctx, next) => {
 
 const checkName = async (ctx, next) => {
   try {
-    await Server.findOne({
+    await Port.findOne({
       where: {
         name: ctx.query['name']
       }

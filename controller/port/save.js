@@ -3,19 +3,23 @@ const uuidV4 = require('uuid/v4')
 const ApiError = require('../../middlewares/ApiError')
 const ErrorNames = require('../../middlewares/ErrorNames')
 
-const Server = require('../../model/Server')
+const Port = require('../../model/Port')
 
 
 module.exports = async (ctx, next) => {
   try {
-    await Server
-      .destroy({
-        where: {
-          id: ctx.query['id']
-        }
+    await Port
+      .build({
+        id: uuidV4(),
+        name: ctx.request.body['name'],
+        port: ctx.request.body['port'],
+        type: ctx.request.body['type'],
+        info: ctx.request.body['info'],
+        serverId: ctx.request.body['serverId']
       })
+      .save()
       .then(server => {
-        ctx.body = server > 0 ? true : false
+        ctx.body = true
       })
   } catch (error) {
     console.log(error)

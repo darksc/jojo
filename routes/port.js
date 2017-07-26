@@ -1,10 +1,6 @@
 const router = require('koa-router')()
 
-const save = require('../controller/server/save')
-const search = require('../controller/server/search')
-const remove = require('../controller/server/remove')
-
-router.prefix('/server')
+router.prefix('/port')
 
 router.post('/save', save)
 
