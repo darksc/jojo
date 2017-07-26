@@ -67,6 +67,7 @@
     position: relative
     height: 100%
     width: 100%
+    font-size: 12px
   .header-wrap
     height: 60px
     line-height: 60px
