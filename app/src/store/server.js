@@ -32,3 +32,9 @@ export const serverRemove = _params => {
     params: _params
   })
 }
+
+export const serverSearchById = _params => {
+  return axios.get(api.serverSearchById, {
+    params: _params
+  })
+}
