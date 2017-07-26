@@ -89,12 +89,12 @@
       }
 
       let validateUser = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9_]{3,10}$/
+        let reg = /^[a-zA-Z0-9_]{3,16}$/
         if (value === '') {
           callback(new Error('请输入用户名'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（3~10个字符，包含字母、数字、下划线）'))
+            callback(new Error('（3~16个字符，包含字母、数字、下划线）'))
           } else {
             callback()
           }
