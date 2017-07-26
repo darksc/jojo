@@ -15,18 +15,19 @@
                 .card-line {{item.user}}
                 .card-line {{item.pass}}
               el-button.button(type="text" v-on:click="goDetail(item.id)") 详情
+              el-button.button(type="text" v-on:click="removeClick(item.id)") 删除
 
     el-dialog(title="添加服务器" v-model="dialogVisible" size="tiny")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="addForm")
         el-form-item(label="代号" prop="name")
           el-input(v-model="form.name")
-        el-form-item(label="介绍")
+        el-form-item(label="介绍" prop="detail")
           el-input(v-model="form.detail")
-        el-form-item(label="IP地址")
+        el-form-item(label="IP地址"  prop="ip")
           el-input(v-model="form.ip")
-        el-form-item(label="用户名")
+        el-form-item(label="用户名"  prop="user")
           el-input(v-model="form.user")
-        el-form-item(label="密码")
+        el-form-item(label="密码"  prop="pass")
           el-input(v-model="form.pass")
         el-form-item
           el-button(type="primary" v-on:click="save()") 保存
@@ -60,6 +61,58 @@
           }
         }
       }
+
+      let validateDetail = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        if (value === '') {
+          callback(new Error('请输入介绍'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+          } else {
+            callback()
+          }
+        }
+      }
+
+      let validateIp = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        if (value === '') {
+          callback(new Error('请输入介绍'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+          } else {
+            callback()
+          }
+        }
+      }
+
+      let validateUser = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        if (value === '') {
+          callback(new Error('请输入介绍'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+          } else {
+            callback()
+          }
+        }
+      }
+
+      let validatePass = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        if (value === '') {
+          callback(new Error('请输入介绍'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+          } else {
+            callback()
+          }
+        }
+      }
       return {
         dialogVisible: false,
         serverList: [],
@@ -73,6 +126,18 @@
         formRules: {
           name: [
             { validator: validateName, required: true, trigger: 'change' }
+          ],
+          detail: [
+            { validator: validateDetail, required: true, trigger: 'change' }
+          ],
+          ip: [
+            { validator: validateIp, required: true, trigger: 'change' }
+          ],
+          user: [
+            { validator: validateUser, required: true, trigger: 'change' }
+          ],
+          pass: [
+            { validator: validatePass, required: true, trigger: 'change' }
           ]
         }
       }
@@ -110,6 +175,33 @@
       },
       goDetail (id) {
         console.log(id)
+      },
+      removeClick (id) {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.serverRemove(id)
+        }).catch(() => {})
+      },
+      serverRemove (id) {
+        server.serverRemove({
+          id: id
+        }).then(res => {
+          if (res.data.data) {
+            this.$message({
+              message: '恭喜你，删除成功!',
+              type: 'success'
+            })
+            this.search()
+          } else {
+            this.$message({
+              message: '恭喜你，删除失败!',
+              type: 'error'
+            })
+          }
+        })
       }
     }
   }

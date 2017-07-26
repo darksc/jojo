@@ -18,7 +18,7 @@ module.exports = async (ctx, next) => {
         pass: ctx.request.body['pass']
       })
       .save()
-      .then(shop => {
+      .then(server => {
         ctx.body = true
       })
   } catch (error) {

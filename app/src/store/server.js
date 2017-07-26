@@ -26,3 +26,9 @@ export const serverCheckName = _params => {
     params: _params
   })
 }
+
+export const serverRemove = _params => {
+  return axios.get(api.serverRemove, {
+    params: _params
+  })
+}
