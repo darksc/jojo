@@ -4,8 +4,8 @@
  */
 const Sequelize = require('sequelize')
 
-const sequelize = new Sequelize('NET_MONITOR', 'postgres', 'Hdsx@qwe2017', {
-  host: '192.168.0.123',
+const sequelize = new Sequelize('super', 'postgres', 'hdsx68714962', {
+  host: '192.168.0.226',
   dialect: 'postgres',
   define: {
     timestamps: false

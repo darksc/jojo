@@ -71,7 +71,6 @@
   .header-wrap
     height: 60px
     line-height: 60px
-    width: 100%
     background-color: #324157
     padding: 0 20px
     color: #fff

@@ -4,20 +4,21 @@
       el-button(type="primary" icon="plus" v-on:click="dialogVisible = true") 添加服务器
 
     el-row
-      el-col(:span="4" v-for="(o, index) in 10")
+      el-col(:span="4" v-for="(item, index) in serverList" v-bind:key="index")
         .card-wrap
           el-card(v-bind:body-style="{ padding: '0px' }")
             .card-content
-              .card-title server
+              .card-title {{item.name}}
               .card-info
-                .card-detail 数据库服务器
-                .card-line 192.168.0.1
-                .card-line root
-                .card-line HDSX68714962
-              el-button.button(type="text") 详情
+                .card-detail {{item.detail}}
+                .card-line {{item.ip}}
+                .card-line {{item.user}}
+                .card-line {{item.pass}}
+              el-button.button(type="text" v-on:click="goDetail(item.id)") 详情
+
     el-dialog(title="添加服务器" v-model="dialogVisible" size="tiny")
-      el-form(v-bind:model="form" v-bind:rules="formRules" ref="addFrom")
-        el-form-item(label="代号")
+      el-form(v-bind:model="form" v-bind:rules="formRules" ref="addForm")
+        el-form-item(label="代号" prop="name")
           el-input(v-model="form.name")
         el-form-item(label="介绍")
           el-input(v-model="form.detail")
@@ -32,26 +33,83 @@
           el-button(v-on:click="reset('addForm')") 取消
 </template>
 <script>
+  import * as server from '../store/server'
+  let usertimer
   export default {
     data () {
+      let validateName = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9]{1,6}$/
+        if (value === '') {
+          callback(new Error('请输入代号'))
+        } else {
+          if (!reg.test(value)) {
+            callback(new Error('（1~6个字符，包含字母、数字）'))
+          } else {
+            clearTimeout(usertimer)
+            usertimer = setTimeout(() => {
+              server.serverCheckName({
+                name: value
+              }).then(res => {
+                if (res.data.data === true) {
+                  callback()
+                } else {
+                  callback(new Error('该代号已存在'))
+                }
+              })
+            }, 500)
+          }
+        }
+      }
       return {
         dialogVisible: false,
+        serverList: [],
         form: {
           name: '',
           detail: '',
           ip: '',
           user: '',
           pass: ''
+        },
+        formRules: {
+          name: [
+            { validator: validateName, required: true, trigger: 'change' }
+          ]
         }
       }
     },
+    mounted () {
+      this.search()
+    },
     methods: {
       save () {
-        console.log('save')
+        server.serverSave(this.form).then(res => {
+          if (res.data.data) {
+            this.$message({
+              message: '恭喜你，保存成功!',
+              type: 'success'
+            })
+            this.$refs['addForm'].resetFields()
+            this.dialogVisible = false
+            this.search()
+          } else {
+            this.$message({
+              message: '对不起，保存失败!',
+              type: 'error'
+            })
+          }
+        })
       },
       reset (name) {
         this.$refs[name].resetFields()
         this.dialogVisible = false
+      },
+      search () {
+        server.serverSearch().then(res => {
+          this.serverList = res.data.data
+        })
+      },
+      goDetail (id) {
+        console.log(id)
       }
     }
   }

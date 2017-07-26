@@ -13,7 +13,7 @@ const restc = require('restc')
 const response = require('./middlewares/response')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const server = require('./routes/server')
 
 // error handler
 onerror(app)
@@ -46,6 +46,6 @@ app.use(response)
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(server.routes(), index.allowedMethods())
 
 module.exports = app

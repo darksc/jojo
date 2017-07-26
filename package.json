@@ -31,6 +31,7 @@
     "sequelize": "^4.0.0",
     "simplify-geometry": "0.0.2",
     "spdy": "^3.4.7",
+    "uuid": "^3.1.0",
     "vuex": "^2.3.1"
   },
   "devDependencies": {
