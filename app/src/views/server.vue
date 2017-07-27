@@ -1,5 +1,9 @@
 <template lang="pug">
   .server-wrap
+    .breadcrumb-wrap
+      el-breadcrumb(separator="/")
+        el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
+        el-breadcrumb-item(v-bind:to="{ path: '/server' }") 服务器
     .button-wrap
       el-button(type="primary" icon="plus" v-on:click="dialogVisible = true") 添加服务器
 

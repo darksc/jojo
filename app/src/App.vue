@@ -2,29 +2,24 @@
   div#app
     header.header-wrap
       header-nav
-
-    .breadcrumb-wrap
-      el-breadcrumb(separator="/")
-        el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
-        el-breadcrumb-item(v-bind:to="{ path: '/' + routeObj[activeIndex].name }" v-if="activeIndex !== 'index'") {{routeObj[activeIndex].cn}}
     div.content-wrap
       el-scrollbar(tag="div" class="view-scrollbar" wrap-class="el-select-dropdown__wrap" view-class="el-select-dropdown__list")
         router-view
 </template>
 <script>
   import { mapState } from 'vuex'
-  import { appRouter, routeObj } from './router'
+  import { appRouter } from './router'
   import store from './store'
   import headerNav from './components/header'
   export default {
     name: 'app',
     data () {
       return {
-        routeObj: routeObj
       }
     },
     mounted () {
       appRouter.beforeEach((to, from, next) => {
+        console.log(to)
         this.$store.dispatch('setNav', to.name)
         next()
       })
@@ -78,6 +73,8 @@
     color: #fff
     font-size: 24px
   .breadcrumb-wrap
+    position: fixed
+    top: 60px
     height: 40px
     line-height: 40px
     overflow: hidden

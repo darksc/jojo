@@ -1,5 +1,11 @@
 <template lang="pug">
   .detail-wrap
+    .breadcrumb-wrap
+      el-breadcrumb(separator="/")
+        el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
+        el-breadcrumb-item(v-bind:to="{ path: '/server' }") 服务器
+        el-breadcrumb-item {{server.name}}
+
     el-alert(v-bind:title="`${server.name} - ${server.detail}`" type="success" v-bind:description="`${server.ip}, ${server.user}, ${server.pass}`" v-bind:closable="false")
 
     .detail-button-wrap

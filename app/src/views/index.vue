@@ -1,5 +1,8 @@
 <template lang="pug">
   .index-wrap
+    .breadcrumb-wrap
+      el-breadcrumb(separator="/")
+        el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
 </template>
 <script>
   export default {
