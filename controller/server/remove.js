@@ -1,5 +1,3 @@
-const Sequelize = require('sequelize')
-const uuidV4 = require('uuid/v4')
 const ApiError = require('../../middlewares/ApiError')
 const ErrorNames = require('../../middlewares/ErrorNames')
 
