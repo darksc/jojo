@@ -20,8 +20,8 @@ module.exports = async (ctx, next) => {
               serverId: ctx.query['id']
             }
           })
-          .then(port => {
-            ctx.body = port > 0 ? true : false
+          .then(server => {
+            ctx.body = true
           })
       })
   } catch (error) {

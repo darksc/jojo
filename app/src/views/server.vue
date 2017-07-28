@@ -5,23 +5,23 @@
         el-breadcrumb-item(v-bind:to="{ path: '/' }") 首页
         el-breadcrumb-item(v-bind:to="{ path: '/server' }") 服务器
     .button-wrap
-      el-button(type="primary" icon="plus" v-on:click="dialogVisible = true") 添加服务器
+      el-button(type="primary" icon="plus" v-on:click="handleAdd()") 添加服务器
 
     el-row
       el-col(:span="4" v-for="(item, index) in serverList" v-bind:key="index")
         .card-wrap
           el-card(v-bind:body-style="{ padding: '0px' }")
             .card-content
-              .card-title {{item.name}}
+              .card-title(v-on:click="goDetail(item.id)") {{item.name}}
               .card-info
                 .card-detail {{item.detail}}
                 .card-line {{item.ip}}
                 .card-line {{item.user}}
                 .card-line {{item.pass}}
-              el-button.button(type="text" v-on:click="goDetail(item.id)") 详情
-              el-button.button(type="text" v-on:click="removeClick(item.id)") 删除
+              el-button.button(type="text" v-on:click="handleEdit(item)") 编辑
+              el-button.button(type="text" v-on:click="handleRemove(item.id)") 删除
 
-    el-dialog(title="添加服务器" v-model="dialogVisible" size="tiny")
+    el-dialog(title="添加服务器" v-model="dialogAddVisible" size="tiny" v-on:open="onOpen")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="addForm")
         el-form-item(label="代号" prop="name")
           el-input(v-model="form.name")
@@ -34,12 +34,31 @@
         el-form-item(label="密码"  prop="pass")
           el-input(v-model="form.pass")
         el-form-item
-          el-button(type="primary" v-on:click="saveClick()") 保存
-          el-button(v-on:click="reset('addForm')") 取消
+          el-button(type="primary" v-on:click="handleSave()") 保存
+          el-button(v-on:click="cancel()") 取消
+
+    el-dialog(title="编辑服务器" v-model="dialogEditVisible" size="tiny")
+      el-form(v-bind:model="form" v-bind:rules="formRules" ref="editForm")
+        input(type="hidden" v-model="form.id")
+        el-form-item(label="代号")
+          el-input(v-model="form.name" v-bind:disabled="true")
+        el-form-item(label="介绍" prop="detail")
+          el-input(v-model="form.detail")
+        el-form-item(label="IP地址"  prop="ip")
+          el-input(v-model="form.ip")
+        el-form-item(label="用户名"  prop="user")
+          el-input(v-model="form.user")
+        el-form-item(label="密码"  prop="pass")
+          el-input(v-model="form.pass")
+        el-form-item
+          el-button(type="primary" v-on:click="editClick()") 保存
+          el-button(v-on:click="cancel()") 取消
 </template>
 <script>
   import * as server from '../store/server'
   import { appRouter } from '../router/'
+  import formMixin from '../mixin/formMixin'
+
   let usertimer
   export default {
     data () {
@@ -119,9 +138,17 @@
         }
       }
       return {
-        dialogVisible: false,
         serverList: [],
+        noneForm: {
+          id: '',
+          name: '',
+          detail: '',
+          ip: '',
+          user: '',
+          pass: ''
+        },
         form: {
+          id: '',
           name: '',
           detail: '',
           ip: '',
@@ -147,18 +174,18 @@
         }
       }
     },
+    mixins: [formMixin],
     mounted () {
       this.search()
     },
     methods: {
-      saveClick () {
-        this.$refs['addForm'].validate((valid) => {
-          if (valid) {
-            this.save()
-          } else {
-            return false
-          }
+      search () {
+        server.serverSearch().then(res => {
+          this.serverList = res.data.data
         })
+      },
+      goDetail (id) {
+        appRouter.push({name: 'detail', query: {id: id}})
       },
       save () {
         server.serverSave(this.form).then(res => {
@@ -167,8 +194,7 @@
               message: '恭喜你，保存成功!',
               type: 'success'
             })
-            this.$refs['addForm'].resetFields()
-            this.dialogVisible = false
+            this.cancel()
             this.search()
           } else {
             this.$message({
@@ -178,28 +204,7 @@
           }
         })
       },
-      reset (name) {
-        this.$refs[name].resetFields()
-        this.dialogVisible = false
-      },
-      search () {
-        server.serverSearch().then(res => {
-          this.serverList = res.data.data
-        })
-      },
-      goDetail (id) {
-        appRouter.push({name: 'detail', query: {id: id}})
-      },
-      removeClick (id) {
-        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.serverRemove(id)
-        }).catch(() => {})
-      },
-      serverRemove (id) {
+      remove (id) {
         server.serverRemove({
           id: id
         }).then(res => {
@@ -211,7 +216,7 @@
             this.search()
           } else {
             this.$message({
-              message: '恭喜你，删除失败!',
+              message: '对不起，删除失败!',
               type: 'error'
             })
           }
@@ -238,6 +243,10 @@
         font-size: 30px
         border-bottom: 3px solid #000
         text-transform: uppercase
+        transition: .3s
+        &:hover
+          cursor: pointer
+          color: #20a0ff
       .card-info
         .card-detail
           font-size: 18px

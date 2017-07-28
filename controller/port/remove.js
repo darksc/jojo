@@ -13,7 +13,7 @@ module.exports = async (ctx, next) => {
         }
       })
       .then(port => {
-        ctx.body = port > 0 ? true : false
+        ctx.body = true
       })
   } catch (error) {
     console.log(error)

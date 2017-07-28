@@ -9,7 +9,7 @@
     el-alert(v-bind:title="`${server.name} - ${server.detail}`" type="success" v-bind:description="`${server.ip}, ${server.user}, ${server.pass}`" v-bind:closable="false")
 
     .detail-button-wrap
-      el-button(type="primary" icon="plus" v-on:click="dialogVisible = true") 添加端口
+      el-button(type="primary" icon="plus" v-on:click="handleAdd()") 添加端口
 
     .detail-table-wrap
       el-table(v-bind:data="tableData" border style="width: 100%")
@@ -17,13 +17,12 @@
         el-table-column(prop="port" label="端口" width="180")
         el-table-column(prop="type" label="类型" width="180")
         el-table-column(prop="info" label="描述 ")
-        el-table-column(label="操作" width="190")
+        el-table-column(label="操作" width="135")
           template(scope="scope")
-            el-button(size="small" v-on:click="handleSearch(scope.$index, scope.row)") 查看
-            el-button(size="small" v-on:click="handleEdit(scope.$index, scope.row)") 编辑
-            el-button(size="small" type="danger" v-on:click="handleRemove(scope.row)") 删除
+            el-button(size="small" v-on:click="handleEdit(scope.row)") 编辑
+            el-button(size="small" type="danger" v-on:click="handleRemove(scope.row.id)") 删除
 
-    el-dialog(title="添加端口" v-model="dialogVisible" size="tiny")
+    el-dialog(title="添加端口" v-model="dialogAddVisible" size="tiny" v-on:open="onOpen")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="addForm")
         el-form-item(label="名称" prop="name")
           el-input(v-model="form.name")
@@ -32,13 +31,29 @@
         el-form-item(label="类型"  prop="type")
           el-input(v-model="form.type")
         el-form-item(label="描述"  prop="info")
-          el-input(v-model="form.info")
+          el-input(type="textarea" v-model="form.info")
         el-form-item
-          el-button(type="primary" v-on:click="saveClick()") 保存
-          el-button(v-on:click="reset('addForm')") 取消
+          el-button(type="primary" v-on:click="handleSave()") 保存
+          el-button(v-on:click="cancel()") 取消
+
+    el-dialog(title="编辑端口" v-model="dialogEditVisible" size="tiny")
+      el-form(v-bind:model="form" v-bind:rules="formRules" ref="editForm")
+        input(type="hidden" v-model="form.id")
+        el-form-item(label="名称")
+          el-input(v-model="form.name" v-bind:disabled="true")
+        el-form-item(label="端口" prop="port")
+          el-input(v-model="form.port")
+        el-form-item(label="类型"  prop="type")
+          el-input(v-model="form.type")
+        el-form-item(label="描述"  prop="info")
+          el-input(type="textarea" v-model="form.info")
+        el-form-item
+          el-button(type="primary" v-on:click="editClick()") 保存
+          el-button(v-on:click="cancel()") 取消
 </template>
 <script>
   import * as server from '../store/server'
+  import formMixin from '../mixin/formMixin'
 
   let usertimer
   export default {
@@ -68,12 +83,12 @@
       }
 
       let validatePort = (rule, value, callback) => {
-        let reg = /^[0-9]*$/
+        let reg = /^[0-9,]*$/
         if (value === '') {
           callback(new Error('请输入端口'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（值能是数字）'))
+            callback(new Error('（值能是数字,多个之间用 , 隔开）'))
           } else {
             callback()
           }
@@ -98,8 +113,16 @@
       return {
         serverId: '',
         server: {},
-        dialogVisible: false,
+        noneForm: {
+          id: '',
+          name: '',
+          port: '',
+          type: '',
+          info: '',
+          serverId: ''
+        },
         form: {
+          id: '',
           name: '',
           port: '',
           type: '',
@@ -128,6 +151,7 @@
         }]
       }
     },
+    mixins: [formMixin],
     mounted () {
       this.serverId = this.$route.query.id
       this.getServer(this.serverId)
@@ -150,15 +174,6 @@
           this.tableData = res.data.data
         })
       },
-      saveClick () {
-        this.$refs['addForm'].validate((valid) => {
-          if (valid) {
-            this.save()
-          } else {
-            return false
-          }
-        })
-      },
       save () {
         this.form.serverId = this.serverId
         server.portSave(this.form).then(res => {
@@ -167,8 +182,8 @@
               message: '恭喜你，保存成功!',
               type: 'success'
             })
-            this.$refs['addForm'].resetFields()
-            this.dialogVisible = false
+            this.cancel()
+            this.dialogAddVisible = false
             this.getPort(this.serverId)
           } else {
             this.$message({
@@ -178,20 +193,7 @@
           }
         })
       },
-      reset (name) {
-        this.$refs[name].resetFields()
-        this.dialogVisible = false
-      },
-      handleRemove (row) {
-        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.portRemove(row.id)
-        }).catch(() => {})
-      },
-      portRemove (id) {
+      remove (id) {
         server.portRemove({
           id: id
         }).then(res => {
@@ -203,7 +205,7 @@
             this.getPort(this.serverId)
           } else {
             this.$message({
-              message: '恭喜你，删除失败!',
+              message: '对不起，删除失败!',
               type: 'error'
             })
           }
