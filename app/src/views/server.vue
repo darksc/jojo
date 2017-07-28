@@ -189,37 +189,19 @@
       },
       save () {
         server.serverSave(this.form).then(res => {
-          if (res.data.data) {
-            this.$message({
-              message: '恭喜你，保存成功!',
-              type: 'success'
-            })
-            this.cancel()
-            this.search()
-          } else {
-            this.$message({
-              message: '对不起，保存失败!',
-              type: 'error'
-            })
-          }
+          this.showMessage(res.data.data, '保存')
         })
       },
       remove (id) {
         server.serverRemove({
           id: id
         }).then(res => {
-          if (res.data.data) {
-            this.$message({
-              message: '恭喜你，删除成功!',
-              type: 'success'
-            })
-            this.search()
-          } else {
-            this.$message({
-              message: '对不起，删除失败!',
-              type: 'error'
-            })
-          }
+          this.showMessage(res.data.data, '删除')
+        })
+      },
+      editClick () {
+        server.serverUpdate(this.form).then(res => {
+          this.showMessage(res.data.data, '修改')
         })
       }
     }

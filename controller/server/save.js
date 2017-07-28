@@ -4,8 +4,7 @@ const ErrorNames = require('../../middlewares/ErrorNames')
 
 const Server = require('../../model/Server')
 
-
-module.exports = async (ctx, next) => {
+const insert = async (ctx, next) => {
   try {
     await Server
       .build({
@@ -24,5 +23,34 @@ module.exports = async (ctx, next) => {
     console.log(error)
     throw new ApiError()
   }
+}
 
+const update = async (ctx, next) => {
+  try {
+    await Server
+      .update(
+        {
+          detail: ctx.request.body['detail'],
+          ip: ctx.request.body['ip'],
+          user: ctx.request.body['user'],
+          pass: ctx.request.body['pass']
+        },
+        {
+          where: {
+            id: ctx.request.body['id']
+          }
+        }
+      )
+      .then(data => {
+        ctx.body = true
+      })
+  } catch (error) {
+    console.log(error)
+    throw new ApiError()
+  }
+}
+
+module.exports = {
+  insert,
+  update
 }

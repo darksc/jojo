@@ -2,6 +2,7 @@ import axios from 'axios'
 import * as api from './api'
 
 const baseURL = process.env.SERVICE_URL
+
 const defaults = {
   baseURL: baseURL,
   headers: {
@@ -16,6 +17,10 @@ Object.assign(axios.defaults, defaults)
 // server 接口
 export const serverSave = _params => {
   return axios.post(api.serverSave, _params)
+}
+
+export const serverUpdate = _params => {
+  return axios.post(api.serverUpdate, _params)
 }
 
 export const serverSearch = _params => {
@@ -51,6 +56,9 @@ export const portSave = _params => {
   return axios.post(api.portSave, _params)
 }
 
+export const portUpdate = _params => {
+  return axios.post(api.portUpdate, _params)
+}
 export const portRemove = _params => {
   return axios.get(api.portRemove, {
     params: _params

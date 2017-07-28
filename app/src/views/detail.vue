@@ -144,10 +144,10 @@
           ]
         },
         tableData: [{
-          name: '什么什么',
-          port: '8001',
-          type: 'nginx',
-          info: '很长很长的描述信息'
+          name: '',
+          port: '',
+          type: '',
+          info: ''
         }]
       }
     },
@@ -155,7 +155,7 @@
     mounted () {
       this.serverId = this.$route.query.id
       this.getServer(this.serverId)
-      this.getPort(this.serverId)
+      this.search(this.serverId)
     },
     methods: {
       getServer (id) {
@@ -167,7 +167,7 @@
           }
         })
       },
-      getPort (serverId) {
+      search (serverId) {
         server.portSearch({
           serverId: serverId
         }).then(res => {
@@ -177,38 +177,19 @@
       save () {
         this.form.serverId = this.serverId
         server.portSave(this.form).then(res => {
-          if (res.data.data) {
-            this.$message({
-              message: '恭喜你，保存成功!',
-              type: 'success'
-            })
-            this.cancel()
-            this.dialogAddVisible = false
-            this.getPort(this.serverId)
-          } else {
-            this.$message({
-              message: '对不起，保存失败!',
-              type: 'error'
-            })
-          }
+          this.showMessagePort(res.data.data, '保存')
         })
       },
       remove (id) {
         server.portRemove({
           id: id
         }).then(res => {
-          if (res.data.data) {
-            this.$message({
-              message: '恭喜你，删除成功!',
-              type: 'success'
-            })
-            this.getPort(this.serverId)
-          } else {
-            this.$message({
-              message: '对不起，删除失败!',
-              type: 'error'
-            })
-          }
+          this.showMessagePort(res.data.data, '删除')
+        })
+      },
+      editClick () {
+        server.portUpdate(this.form).then(res => {
+          this.showMessagePort(res.data.data, '修改')
         })
       }
     }

@@ -19,7 +19,6 @@
     },
     mounted () {
       appRouter.beforeEach((to, from, next) => {
-        console.log(to)
         this.$store.dispatch('setNav', to.name)
         next()
       })

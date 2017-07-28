@@ -6,7 +6,9 @@ const remove = require('../controller/port/remove')
 
 router.prefix('/port')
 
-router.post('/save', save)
+router.post('/save', save.insert)
+
+router.post('/update', save.update)
 
 router.get('/search', search.findAll)
 

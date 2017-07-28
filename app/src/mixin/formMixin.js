@@ -45,6 +45,36 @@ export default {
       }).then(() => {
         this.remove(id)
       }).catch(() => {})
+    },
+    showMessage (success, msg) {
+      if (success) {
+        this.$message({
+          message: `恭喜你，${msg}成功!`,
+          type: 'success'
+        })
+        this.search()
+        this.cancel()
+      } else {
+        this.$message({
+          message: `对不起，${msg}失败!`,
+          type: 'error'
+        })
+      }
+    },
+    showMessagePort (success, msg) {
+      if (success) {
+        this.$message({
+          message: `恭喜你，${msg}成功!`,
+          type: 'success'
+        })
+        this.search(this.serverId)
+        this.cancel()
+      } else {
+        this.$message({
+          message: `对不起，${msg}失败!`,
+          type: 'error'
+        })
+      }
     }
   }
 }
