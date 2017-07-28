@@ -143,12 +143,7 @@
             { validator: validateInfo, required: true, trigger: 'change' }
           ]
         },
-        tableData: [{
-          name: '',
-          port: '',
-          type: '',
-          info: ''
-        }]
+        tableData: []
       }
     },
     mixins: [formMixin],
