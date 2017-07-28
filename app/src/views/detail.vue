@@ -36,7 +36,7 @@
           el-button(type="primary" v-on:click="handleSave()") 保存
           el-button(v-on:click="cancel()") 取消
 
-    el-dialog(title="编辑端口" v-model="dialogEditVisible" size="tiny")
+    el-dialog(title="编辑端口" v-model="dialogEditVisible" size="tiny" v-on:close="onClose")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="editForm")
         input(type="hidden" v-model="form.id")
         el-form-item(label="名称")
@@ -177,19 +177,19 @@
       save () {
         this.form.serverId = this.serverId
         server.portSave(this.form).then(res => {
-          this.showMessagePort(res.data.data, '保存')
+          this.showMessage(res.data.data, '保存')
         })
       },
       remove (id) {
         server.portRemove({
           id: id
         }).then(res => {
-          this.showMessagePort(res.data.data, '删除')
+          this.showMessage(res.data.data, '删除')
         })
       },
       editClick () {
         server.portUpdate(this.form).then(res => {
-          this.showMessagePort(res.data.data, '修改')
+          this.showMessage(res.data.data, '修改')
         })
       }
     }
