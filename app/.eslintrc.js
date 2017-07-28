@@ -26,8 +26,6 @@ module.exports = {
   },
   "globals": {
     "$": true,
-    "ol": true,
-    "config": true,
-    "HMap": true
+    "config": true
   }
 }

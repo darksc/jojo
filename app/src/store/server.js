@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as api from './api'
 
-const baseURL = process.env.SERVICE_URL
+const baseURL = config[process.env.NODE_ENV].url
 
 const defaults = {
   baseURL: baseURL,

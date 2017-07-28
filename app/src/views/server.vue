@@ -8,7 +8,7 @@
       el-button(type="primary" icon="plus" v-on:click="handleAdd()") 添加服务器
 
     el-row
-      el-col(:span="4" v-for="(item, index) in serverList" v-bind:key="index")
+      el-col(:span="8" v-for="(item, index) in serverList" v-bind:key="index")
         .card-wrap
           el-card(v-bind:body-style="{ padding: '0px' }")
             .card-content
@@ -68,12 +68,12 @@
   export default {
     data () {
       let validateName = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]{1,6}$/
+        let reg = /^[a-zA-Z0-9]{1,10}$/
         if (value === '') {
           callback(new Error('请输入代号'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~6个字符，包含字母、数字）'))
+            callback(new Error('（1~10个字符，包含字母、数字）'))
           } else {
             clearTimeout(usertimer)
             usertimer = setTimeout(() => {
@@ -92,12 +92,12 @@
       }
 
       let validateDetail = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,10}$/
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5]{1,20}$/
         if (value === '') {
           callback(new Error('请输入介绍'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~10个字符，包含中文、字母、数字）'))
+            callback(new Error('（1~20个字符，包含中文、字母、数字）'))
           } else {
             callback()
           }
@@ -131,15 +131,10 @@
       }
 
       let validatePass = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9_]{6,16}$/
         if (value === '') {
           callback(new Error('请输入密码'))
         } else {
-          if (!reg.test(value)) {
-            callback(new Error('（6~16个字符，包含字母、数字、下划线）'))
-          } else {
-            callback()
-          }
+          callback()
         }
       }
       return {

@@ -59,12 +59,12 @@
   export default {
     data () {
       let validateName = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]{1,6}$/
+        let reg = /^[a-zA-Z0-9-_]{1,20}$/
         if (value === '') {
           callback(new Error('请输入名称'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('（1~6个字符，包含字母、数字）'))
+            callback(new Error('（1~20个字符，包含字母、数字、下划线、横线）'))
           } else {
             clearTimeout(usertimer)
             usertimer = setTimeout(() => {
