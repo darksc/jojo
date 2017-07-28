@@ -16,6 +16,7 @@
               .card-info
                 .card-detail {{item.detail}}
                 .card-line {{item.ip}}
+                .card-line {{(item.outIp === '' || item.outIp === null) ? '无' : item.outIp}}
                 .card-line {{item.user}}
                 .card-line {{item.pass}}
               el-button.button(type="text" v-on:click="handleEdit(item)") 编辑
@@ -27,8 +28,10 @@
           el-input(v-model="form.name")
         el-form-item(label="介绍" prop="detail")
           el-input(v-model="form.detail")
-        el-form-item(label="IP地址"  prop="ip")
+        el-form-item(label="内网IP地址"  prop="ip")
           el-input(v-model="form.ip")
+        el-form-item(label="外网IP地址"  prop="outIp")
+          el-input(v-model="form.outIp")
         el-form-item(label="用户名"  prop="user")
           el-input(v-model="form.user")
         el-form-item(label="密码"  prop="pass")
@@ -37,15 +40,17 @@
           el-button(type="primary" v-on:click="handleSave()") 保存
           el-button(v-on:click="cancel()") 取消
 
-    el-dialog(title="编辑服务器" v-model="dialogEditVisible" size="tiny")
+    el-dialog(title="编辑服务器" v-model="dialogEditVisible" size="tiny" v-on:close="onClose")
       el-form(v-bind:model="form" v-bind:rules="formRules" ref="editForm")
         input(type="hidden" v-model="form.id")
         el-form-item(label="代号")
           el-input(v-model="form.name" v-bind:disabled="true")
         el-form-item(label="介绍" prop="detail")
           el-input(v-model="form.detail")
-        el-form-item(label="IP地址"  prop="ip")
+        el-form-item(label="内网IP地址"  prop="ip")
           el-input(v-model="form.ip")
+        el-form-item(label="外网IP地址"  prop="outIp")
+          el-input(v-model="form.outIp")
         el-form-item(label="用户名"  prop="user")
           el-input(v-model="form.user")
         el-form-item(label="密码"  prop="pass")
@@ -144,6 +149,7 @@
           name: '',
           detail: '',
           ip: '',
+          outIp: '',
           user: '',
           pass: ''
         },
@@ -152,6 +158,7 @@
           name: '',
           detail: '',
           ip: '',
+          outIp: '',
           user: '',
           pass: ''
         },
@@ -163,6 +170,9 @@
             { validator: validateDetail, required: true, trigger: 'change' }
           ],
           ip: [
+            { validator: validateIp, required: true, trigger: 'change' }
+          ],
+          outIp: [
             { validator: validateIp, required: true, trigger: 'change' }
           ],
           user: [

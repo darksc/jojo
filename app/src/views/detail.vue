@@ -6,7 +6,7 @@
         el-breadcrumb-item(v-bind:to="{ path: '/server' }") 服务器
         el-breadcrumb-item {{server.name}}
 
-    el-alert(v-bind:title="`${server.name} - ${server.detail}`" type="success" v-bind:description="`${server.ip}, ${server.user}, ${server.pass}`" v-bind:closable="false")
+    el-alert(v-bind:title="`${server.name} - ${server.detail}`" type="success" v-bind:description="`${server.ip}, ${server.outIp}, ${server.user}, ${server.pass}`" v-bind:closable="false")
 
     .detail-button-wrap
       el-button(type="primary" icon="plus" v-on:click="handleAdd()") 添加端口

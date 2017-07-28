@@ -19,6 +19,9 @@ const Server = sequelize.define('server', {
   ip: {
     type: Sequelize.STRING
   },
+  outIp: {
+    type: Sequelize.STRING
+  },
   user: {
     type: Sequelize.STRING
   },

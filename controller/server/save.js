@@ -12,6 +12,7 @@ const insert = async (ctx, next) => {
         name: ctx.request.body['name'],
         detail: ctx.request.body['detail'],
         ip: ctx.request.body['ip'],
+        outIp: ctx.request.body['outIp'],
         user: ctx.request.body['user'],
         pass: ctx.request.body['pass']
       })
@@ -32,6 +33,7 @@ const update = async (ctx, next) => {
         {
           detail: ctx.request.body['detail'],
           ip: ctx.request.body['ip'],
+          outIp: ctx.request.body['outIp'],
           user: ctx.request.body['user'],
           pass: ctx.request.body['pass']
         },
