@@ -5,10 +5,15 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import App from './App'
 import { appRouter } from './router'
+import filters from './filters/filters'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+
+for (let key in filters) {
+  Vue.filter(key, filters[key])
+}
 
 /* eslint-disable no-new */
 window.vmApp = new Vue({

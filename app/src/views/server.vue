@@ -16,7 +16,7 @@
               .card-info
                 .card-detail {{item.detail}}
                 .card-line {{item.ip}}
-                .card-line {{(item.outIp === '' || item.outIp === null) ? '无' : item.outIp}}
+                .card-line {{item.outIp | FormatNull}}
                 .card-line {{item.user}}
                 .card-line {{item.pass}}
               el-button.button(type="text" v-on:click="handleEdit(item)") 编辑
